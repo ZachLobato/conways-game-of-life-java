@@ -50,7 +50,6 @@ public class SimulatorTests {
 		// Given		
 		//Simulator mockedSimulator = spy(Simulator.class);
 		World seedWorld = new World(new Coordinate(1234,1234), 3, 3);
-		World world2 = new World(new Coordinate(1234,1234), 3, 3);
 
 		// When
 		when(mockedSimulator.generatesSeedWorld()).thenReturn(seedWorld);
@@ -112,4 +111,16 @@ public class SimulatorTests {
 		
 	}
 
+	public void populateReplacementWorldTest(){
+		// Given
+		World oldWorld = new World(new Coordinate(123, 456), 3, 3);
+		World newWorld = new World(new Coordinate(123, 456), 3, 3);
+		World spyNewWorld = spy(newWorld);
+		
+		// When
+		mockedSimulator.populateReplacementWorld(oldWorld, spyNewWorld);
+		
+		// Then
+		verify(spyNewWorld).getActiveNeighbors(0, 0);
+	}
 }

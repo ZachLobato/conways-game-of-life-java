@@ -5,7 +5,7 @@ public class World {
 	Coordinate topLeft;
 	int width;
 	int height;
-	private boolean[][] cells;
+	public boolean[][] cells;
 	
 	public World(Coordinate topLeftCoordinate, int width, int height){
 		this.topLeft = new Coordinate(topLeftCoordinate.x, topLeftCoordinate.y);
