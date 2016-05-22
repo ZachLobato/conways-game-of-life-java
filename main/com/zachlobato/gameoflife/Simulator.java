@@ -1,6 +1,16 @@
 package com.zachlobato.gameoflife;
 
-public class Simulator {
+import java.awt.Graphics;
+import java.awt.Image;
+
+import javax.swing.JApplet;
+
+public class Simulator extends JApplet {
+
+	private static final long serialVersionUID = 817526540227405637L;
+	Image backbuffer;
+	Graphics backg;
+	
 
 	public void simulate(int numberOfGenerations) {
 		// generateSeedWorld
@@ -82,7 +92,7 @@ public class Simulator {
 		int newHeight = oldWorld.height;
 		
 		if (topExpands){
-			newTopLeft.y -= 1;
+			newTopLeft.y += 1;
 			newHeight += 1;
 		}
 		if (bottomExpands){
@@ -168,6 +178,7 @@ public class Simulator {
 		
 		if (topContracts){
 			newWorld.topLeft.y -= 1;
+			newWorld.yOffset -= 1;
 			newWorld.height -= 1;
 		}
 		if (bottomContracts){
@@ -175,6 +186,7 @@ public class Simulator {
 		}
 		if (leftContracts){
 			newWorld.topLeft.x += 1;
+			newWorld.xOffset += 1;
 			newWorld.width -= 1;
 		}
 		if (rightContracts){
