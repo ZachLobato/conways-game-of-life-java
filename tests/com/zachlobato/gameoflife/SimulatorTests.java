@@ -75,7 +75,6 @@ public class SimulatorTests {
 		// Then
 		verify(mockedSimulator).createReplacementWorld(oldWorld);
 		verify(mockedSimulator).populateReplacementWorld(oldWorld, newWorld);
-		verify(mockedSimulator).contractReplacementWorld(newWorld);
 		
 	}
 	
@@ -123,4 +122,78 @@ public class SimulatorTests {
 		// Then
 		verify(spyNewWorld).getActiveNeighbors(0, 0);
 	}
+	
+	/* UNIT TESTING */
+	
+	public void createReplacementWorldTest1(){
+		Simulator sim = new Simulator();
+		
+		World oldWorld = new World(new Coordinate(0, 0), 3, 5);
+		
+		oldWorld.activateCell(1, 1);
+		oldWorld.activateCell(1, 2);
+		oldWorld.activateCell(1, 3);
+		
+		World newWorld = sim.createReplacementWorld(oldWorld);
+		Assert.assertEquals(-1, newWorld.topLeft.x);
+		Assert.assertEquals(0, newWorld.topLeft.y);		
+		
+		String output = newWorld.toString();
+		
+		Assert.assertEquals("OOOOO\n"
+						  + "OOOOO\n"
+						  + "OOOOO\n"
+						  + "OOOOO\n"
+						  + "OOOOO\n", output);				
+	}
+	
+	public void simulateTest1(){
+		Simulator simulator =  new Simulator();
+		
+		World world = new World(new Coordinate(0,0), 5, 3);
+		world.activateCell(1,1);
+		world.activateCell(2,1);
+		world.activateCell(3,1);
+		String output = world.toString();		
+		Assert.assertEquals("OOOOO\n"
+						  + "OXXXO\n"
+						  + "OOOOO\n", output);
+		
+		World nextGenWorld = simulator.simulateGeneration(world);
+				
+		output = nextGenWorld.toString();		
+		Assert.assertEquals("OOO\n"
+						  + "OXO\n"
+						  + "OXO\n"
+						  + "OXO\n"
+						  + "OOO\n", output);
+		Assert.assertEquals(1, nextGenWorld.topLeft.x);
+		Assert.assertEquals(-1, nextGenWorld.topLeft.y);
+		
+		
+//		World nextNextGenWorld = simulator.simulateGeneration(nextGenWorld);
+//		output = nextNextGenWorld.toString();
+//		
+//		Assert.assertEquals("OOOOO\n"
+//						  + "OXXXO\n"
+//						  + "OOOOO\n", output);
+//		
+//		nextGenWorld = simulator.simulateGeneration(nextNextGenWorld);
+//		output = nextGenWorld.toString();
+//		
+//		Assert.assertEquals("OOO\n"
+//						  + "OXO\n"
+//						  + "OXO\n"
+//						  + "OXO\n"
+//						  + "OOO\n", output);
+//		
+//		nextNextGenWorld = simulator.simulateGeneration(nextGenWorld);
+//		output = nextNextGenWorld.toString();
+//		
+//		Assert.assertEquals("OOOOO\n"
+//				  + "OXXXO\n"
+//				  + "OOOOO\n", output);
+		
+	}
+	
 }
