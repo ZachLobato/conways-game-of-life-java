@@ -16,61 +16,77 @@ public class Simulator extends JApplet implements MouseListener {
 	Image backBuffer;
 	Graphics backg;
 	
-//	Image backBuffer2;
-//	Graphics backg2;
-	
-	Timer timer = new Timer();
-	TimerTask task = new MyTimerTask();
-	World world = generatesSeedWorld();
+	Timer timer;
+	TimerTask task;
+	World world;
 	private World emptyWorld;
 	
 	private class MyTimerTask extends TimerTask{
+		/**
+		 * The main loop of the program. Causes new worlds to be
+		 * generated.
+		 */
 		public void run(){
 			world = simulateGeneration(world);
 			repaint();
 		}
 	}
 	
-	public void init(){
+	/**
+	 * Initializes global variables for application. Only executed once
+	 * during simulation.
+	 */
+	public void init(){				
+		// Worlds (States)
+		world = generatesSeedWorld();
 		emptyWorld = new World(new Coordinate(0,0), 1,1);
+		
+		// Drawing support
 		backBuffer = createImage(this.getWidth(), this.getHeight());
 		backg = backBuffer.getGraphics();
+		
+		// Support for mouse events
 		this.addMouseListener(this);		
-		timer.schedule(task, 0, 1600);
+		
+		// Simulation clock
+		timer = new Timer();
+		task = new MyTimerTask();
+		timer.schedule(task, 0, 64);
 	}
 	
+	/**
+	 * A part of the JApplet, overriding allows for 
+	 * backbuffering.
+	 */
 	public void paint(Graphics g){
 		update(g);
 	}
 	
+	/**
+	 * Allows for backbuffer with backg.
+	 */
 	public void update(Graphics g){
 		g.drawImage(backBuffer, 0, 0, this);
-		clearScreen(backg, Color.WHITE);
-		
+		clearScreen(backg, Color.WHITE);		
 		world.drawWorld(g);
 	}
 	
+	/**
+	 * Clears a JApplet window with the specified color.
+	 * 
+	 * @param g
+	 * @param screenColor
+	 */
 	private void clearScreen(Graphics g, Color screenColor){
 		g.setColor(screenColor);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 	}
 
-	public void simulate(int numberOfGenerations) {
-		// generateSeedWorld
-		World seedWorld = generatesSeedWorld();
-		
-		// outputWorld to Screen
-		outputWorld(seedWorld);
-								
-		// outputWorld numberOfGenerations times
-		World world = seedWorld;
-		for (int generations = numberOfGenerations; generations > 0; generations--){
-			
-			world = simulateGeneration(world);
-			outputWorld(world);
-		}		
-	}
-
+	/**
+	 * Generates a seed world with which to start the simulation.
+	 * 
+	 * @return World - Seed world
+	 */
 	protected World generatesSeedWorld() {
 		// createRandomSizedWorld	
 		// populateWorldWithCells
@@ -78,8 +94,8 @@ public class Simulator extends JApplet implements MouseListener {
 		World staticWorld;
 		
 		// SHORT LIVED
-		staticWorld = new World(new Coordinate(0,0), 3, 3);		
-		staticWorld.activateCell(1, 1);
+//		staticWorld = new World(new Coordinate(0,0), 3, 3);		
+//		staticWorld.activateCell(1, 1);
 		
 		// SIMPLE REPEAT
 //		staticWorld = new World(new Coordinate(5,5), 5, 3);		
@@ -88,29 +104,31 @@ public class Simulator extends JApplet implements MouseListener {
 //		staticWorld.activateCell(3, 1);
 		
 		// INFINITE GROWTH
-//		staticWorld = new World(new Coordinate(0,0), 10, 8);
-//		staticWorld.activateCell(1, 6);
-//		
-//		staticWorld.activateCell(3, 5);
-//		staticWorld.activateCell(3, 6);
-//		
-//		staticWorld.activateCell(5, 2);
-//		staticWorld.activateCell(5, 3);
-//		staticWorld.activateCell(5, 4);
-//		
-//		staticWorld.activateCell(7, 1);
-//		staticWorld.activateCell(7, 2);
-//		staticWorld.activateCell(7, 3);
-//		
-//		staticWorld.activateCell(8, 2);
+		staticWorld = new World(new Coordinate(0,0), 10, 8);
+		staticWorld.activateCell(1, 6);
+		
+		staticWorld.activateCell(3, 5);
+		staticWorld.activateCell(3, 6);
+		
+		staticWorld.activateCell(5, 2);
+		staticWorld.activateCell(5, 3);
+		staticWorld.activateCell(5, 4);
+		
+		staticWorld.activateCell(7, 1);
+		staticWorld.activateCell(7, 2);
+		staticWorld.activateCell(7, 3);
+		
+		staticWorld.activateCell(8, 2);
 				
 		return staticWorld;
 	}
 
-	protected void outputWorld(World world) {		
-		// mapWorldToOutput
-	}
-
+	/**
+	 * Runs simulation through a single generation.
+	 * 
+	 * @param oldWorld - the old world
+	 * @return World - the next generation of the world
+	 */
 	protected World simulateGeneration(World oldWorld) {
 		
 		if (oldWorld.width < 3 || oldWorld.height < 3)
@@ -257,6 +275,6 @@ public class Simulator extends JApplet implements MouseListener {
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
-	}		
+	}
 	
 }

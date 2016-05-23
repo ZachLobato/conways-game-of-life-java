@@ -13,56 +13,6 @@ public class SimulatorTests {
 	Simulator mockedSimulator;
 	
 	@Test
-	public void simulateTestZeroGenerations(){
-		// Given
-		World seedWorld = new World(new Coordinate(1234,1234), 3, 3);
-		
-		// When	
-		when(mockedSimulator.generatesSeedWorld()).thenReturn(seedWorld);
-		mockedSimulator.simulate(0);
-
-		// Then
-		verify(mockedSimulator).generatesSeedWorld();
-		verify(mockedSimulator).outputWorld(seedWorld);
-	}
-	
-	@Test
-	public void simulateTestOneGenerations(){
-		// Given		
-		//Simulator mockedSimulator = spy(Simulator.class);
-		World seedWorld = new World(new Coordinate(1234,1234), 3, 3);
-		World world2 = new World(new Coordinate(1234,1234), 3, 3);
-
-		// When
-		when(mockedSimulator.generatesSeedWorld()).thenReturn(seedWorld);
-		when(mockedSimulator.simulateGeneration(seedWorld)).thenReturn(world2);
-		
-		mockedSimulator.simulate(1);
-
-		// Then
-		verify(mockedSimulator).generatesSeedWorld();
-		verify(mockedSimulator).outputWorld(seedWorld);
-		verify(mockedSimulator).outputWorld(world2);		
-	}
-	
-	@Test
-	public void simulateTestOneGenerations2(){
-		// Given		
-		//Simulator mockedSimulator = spy(Simulator.class);
-		World seedWorld = new World(new Coordinate(1234,1234), 3, 3);
-
-		// When
-		when(mockedSimulator.generatesSeedWorld()).thenReturn(seedWorld);
-		
-		mockedSimulator.simulate(1);
-
-		// Then
-		verify(mockedSimulator).generatesSeedWorld();
-		verify(mockedSimulator).outputWorld(seedWorld);
-		verify(mockedSimulator).simulateGeneration(seedWorld);
-	}
-	
-	@Test
 	public void simulateGenerationTest(){
 		// Given
 		World oldWorld = new World(new Coordinate(1234,1234), 3, 3);
