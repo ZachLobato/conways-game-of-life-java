@@ -2,14 +2,44 @@ package com.zachlobato.gameoflife;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JApplet;
 
-public class Simulator extends JApplet {
+public class Simulator extends JApplet implements MouseListener {
 
 	private static final long serialVersionUID = 817526540227405637L;
-	Image backbuffer;
+	Image backBuffer;
 	Graphics backg;
+	Timer timer = new Timer();
+	TimerTask task = new MyTimerTask();
+	World world = generatesSeedWorld();
+	
+	private class MyTimerTask extends TimerTask{
+		public void run(){
+			world = simulateGeneration(world);
+			repaint();
+		}
+	}
+	
+	public void init(){
+		backBuffer = createImage(this.getWidth(), this.getHeight());
+		
+		this.addMouseListener(this);
+		
+		timer.schedule(task, 0, 16);
+	}
+	
+	public void paint(Graphics g){
+		update(g);
+	}
+	
+	public void update(Graphics g){
+		
+	}
 	
 
 	public void simulate(int numberOfGenerations) {
@@ -29,11 +59,16 @@ public class Simulator extends JApplet {
 	}
 
 	protected World generatesSeedWorld() {
-		// createRandomSizedWorld
-		
+		// createRandomSizedWorld	
 		// populateWorldWithCells
+		
+		World staticWorld = new World(new Coordinate(5,5), 5, 3);
+		
+		staticWorld.activateCell(1, 1);
+		staticWorld.activateCell(2, 1);
+		staticWorld.activateCell(3, 1);
 				
-		return null;
+		return staticWorld;
 	}
 
 	protected void outputWorld(World world) {		
@@ -48,7 +83,7 @@ public class Simulator extends JApplet {
 		populateReplacementWorld(oldWorld, newWorld);
 		
 		// contractWorld		
-		contractReplacementWorld(newWorld);
+		newWorld.contractWorld();
 		
 		return newWorld;
 	}
@@ -123,7 +158,7 @@ public class Simulator extends JApplet {
 		int neighborCount = 0;
 		for (int x = 0; x < oldWorld.width; x++){
 			for (int y = 0; y < oldWorld.height; y++){
-				newWorld.cells[x + xOffset][y + yOffset] = oldWorld.cells[x][y];
+				newWorld.setCellValue(x + xOffset, y + yOffset, oldWorld.getCellValue(x,y));
 								
 				neighborCount = oldWorld.getActiveNeighbors(x, y);
 				
@@ -148,50 +183,39 @@ public class Simulator extends JApplet {
 		}
 	}
 
-	public void contractReplacementWorld(World newWorld) {
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
 		
-		boolean topContracts, bottomContracts, leftContracts, rightContracts;
-		topContracts = bottomContracts = leftContracts = rightContracts = true;
+	}
+
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
 		
-		// Check top row
-		// Check bottom row		
-		for (int x = 0; x < newWorld.width; x++){
-			if (newWorld.getActiveNeighbors(x, 0)>0){
-				topContracts = false;
-			}
-			if (newWorld.getActiveNeighbors(x, newWorld.height-1)>0){
-				bottomContracts = false;
-			}
-		}
+	}
+
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
 		
-		// Check left column		
-		// Check right column
-		for (int y = 0; y < newWorld.height; y++){
-			if (newWorld.getActiveNeighbors(0, y)>0){
-				leftContracts = false;
-			}
-			if (newWorld.getActiveNeighbors(newWorld.width-1, y)>0){
-				rightContracts = false;
-			}
-		}
+	}
+
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
 		
-		if (topContracts){
-			newWorld.topLeft.y -= 1;
-			newWorld.yOffset -= 1;
-			newWorld.height -= 1;
-		}
-		if (bottomContracts){
-			newWorld.height -= 1;
-		}
-		if (leftContracts){
-			newWorld.topLeft.x += 1;
-			newWorld.xOffset += 1;
-			newWorld.width -= 1;
-		}
-		if (rightContracts){
-			newWorld.width -= 1;
-		}
 	}		
 	
 }
