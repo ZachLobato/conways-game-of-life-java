@@ -1,5 +1,9 @@
 package com.zachlobato.gameoflife;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.util.Random;
+
 public class World {
 
 	Coordinate topLeft;
@@ -8,6 +12,7 @@ public class World {
 	private boolean[][] cells;
 	private int yOffset;
 	private int xOffset;
+	int dimension = 1075;
 
 	public World(Coordinate topLeftCoordinate, int width, int height){
 		this.topLeft = new Coordinate(topLeftCoordinate.x, topLeftCoordinate.y);
@@ -123,6 +128,42 @@ public class World {
 
 	public void deactivateCell(int x, int y){
 		cells[x][y] = false;
+	}
+
+	public void drawWorld(Graphics g) {
+		// TODO Auto-generated method stub
+		// Draw Grid
+		int largerEdge = this.width < this.height? this.height : this.width;
+		int cellWidthAndHeight = dimension/largerEdge;
+
+		Random r = new Random();
+
+		// Draw Cells
+		for (int x = 0; x < this.width; x++){
+			for (int y = 0; y < this.height; y++){
+
+				//Color randomColor = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255), r.nextInt(25));
+
+				if (cells[x + xOffset][y + yOffset]){
+					g.setColor(Color.BLACK);
+					g.fillRect(x*cellWidthAndHeight, y*cellWidthAndHeight, 
+							cellWidthAndHeight, cellWidthAndHeight);
+				}
+				else{
+					//g.setColor(randomColor);
+				}
+				
+
+			}
+		}
+
+		g.setColor(new Color(235, 235, 235));
+
+		for (int x = 0; x < this.width; x++)
+			g.drawLine(x*cellWidthAndHeight, 0, x*cellWidthAndHeight, cellWidthAndHeight*this.height);
+
+		for (int y = 0; y < this.height; y++)
+			g.drawLine(0, y*cellWidthAndHeight, cellWidthAndHeight*this.width, y*cellWidthAndHeight);
 	}
 
 }

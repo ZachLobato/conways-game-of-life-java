@@ -1,5 +1,6 @@
 package com.zachlobato.gameoflife;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
@@ -14,6 +15,10 @@ public class Simulator extends JApplet implements MouseListener {
 	private static final long serialVersionUID = 817526540227405637L;
 	Image backBuffer;
 	Graphics backg;
+	
+//	Image backBuffer2;
+//	Graphics backg2;
+	
 	Timer timer = new Timer();
 	TimerTask task = new MyTimerTask();
 	World world = generatesSeedWorld();
@@ -27,10 +32,9 @@ public class Simulator extends JApplet implements MouseListener {
 	
 	public void init(){
 		backBuffer = createImage(this.getWidth(), this.getHeight());
-		
-		this.addMouseListener(this);
-		
-		timer.schedule(task, 0, 16);
+		backg = backBuffer.getGraphics();
+		this.addMouseListener(this);		
+		timer.schedule(task, 0, 64);
 	}
 	
 	public void paint(Graphics g){
@@ -38,9 +42,16 @@ public class Simulator extends JApplet implements MouseListener {
 	}
 	
 	public void update(Graphics g){
+		g.drawImage(backBuffer, 0, 0, this);
+		clearScreen(backg, Color.WHITE);
 		
+		world.drawWorld(g);
 	}
 	
+	private void clearScreen(Graphics g, Color screenColor){
+		g.setColor(screenColor);
+		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+	}
 
 	public void simulate(int numberOfGenerations) {
 		// generateSeedWorld
@@ -62,11 +73,30 @@ public class Simulator extends JApplet implements MouseListener {
 		// createRandomSizedWorld	
 		// populateWorldWithCells
 		
-		World staticWorld = new World(new Coordinate(5,5), 5, 3);
+		World staticWorld;
 		
-		staticWorld.activateCell(1, 1);
-		staticWorld.activateCell(2, 1);
-		staticWorld.activateCell(3, 1);
+		// SIMPLE REPEAT
+//		staticWorld = new World(new Coordinate(5,5), 5, 3);		
+//		staticWorld.activateCell(1, 1);
+//		staticWorld.activateCell(2, 1);
+//		staticWorld.activateCell(3, 1);
+		
+		// INFINITE GROWTH
+		staticWorld = new World(new Coordinate(0,0), 10, 8);
+		staticWorld.activateCell(1, 6);
+		
+		staticWorld.activateCell(3, 5);
+		staticWorld.activateCell(3, 6);
+		
+		staticWorld.activateCell(5, 2);
+		staticWorld.activateCell(5, 3);
+		staticWorld.activateCell(5, 4);
+		
+		staticWorld.activateCell(7, 1);
+		staticWorld.activateCell(7, 2);
+		staticWorld.activateCell(7, 3);
+		
+		staticWorld.activateCell(8, 2);
 				
 		return staticWorld;
 	}
@@ -175,8 +205,9 @@ public class Simulator extends JApplet implements MouseListener {
 				case 3:
 					newWorld.activateCell(x + xOffset, y + yOffset);
 					break;
-				// Cell does not change
+				// Cell dies not change
 				default:
+					newWorld.deactivateCell(x + xOffset,  y + yOffset);
 					break;
 				}												
 			}
