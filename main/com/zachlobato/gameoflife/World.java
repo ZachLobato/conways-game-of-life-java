@@ -5,9 +5,9 @@ public class World {
 	Coordinate topLeft;
 	int width;
 	int height;
-	public boolean[][] cells;
-	public int yOffset;
-	public int xOffset;
+	private boolean[][] cells;
+	private int yOffset;
+	private int xOffset;
 
 	public World(Coordinate topLeftCoordinate, int width, int height){
 		this.topLeft = new Coordinate(topLeftCoordinate.x, topLeftCoordinate.y);
@@ -23,7 +23,7 @@ public class World {
 			for (int j = -1; j < 2; j++){
 				// Don't count own cell
 				if (!(i == 0 && j == 0)){
-					if (cellIsActive(x + i, y + j)){
+					if (cellIsActive(x + i + xOffset, y + j + yOffset)){
 						activeCount++;
 					}						
 				}				
@@ -31,6 +31,14 @@ public class World {
 		}
 
 		return activeCount;
+	}
+	
+	public boolean getCellValue(int x, int y){
+		return cells[x + xOffset][y + yOffset];
+	}
+	
+	public void setCellValue(int x, int y, boolean newValue){
+		cells[x + xOffset][y + yOffset] = newValue;
 	}
 
 	private boolean cellIsActive(int x, int y) {
@@ -48,7 +56,7 @@ public class World {
 	public String toString(){
 		StringBuilder output = new StringBuilder();
 
-		for (int y = 0; y < this.height; y++)		
+		for (int y = 0; y < this.height; y++){		
 			for(int x = 0; x < this.width; x++){
 				{
 					if (cells[x + xOffset][y + yOffset])
@@ -56,11 +64,58 @@ public class World {
 					else
 						output.append("O");
 				}
-				output.append("\n");
 			}
-
+			output.append("\n");
+		}
 		return output.toString();
 	}
+
+	public void contractWorld() {
+
+		boolean topContracts, bottomContracts, leftContracts, rightContracts;
+		topContracts = bottomContracts = leftContracts = rightContracts = true;
+
+
+		// Check top row
+		// Check bottom row		
+		for (int x = 0; x < this.width; x++){
+			if (this.getActiveNeighbors(x, 0)>0){
+				topContracts = false;
+			}
+			if (this.getActiveNeighbors(x, this.height-1)>0){
+				bottomContracts = false;
+			}
+		}
+
+		// Check left column		
+		// Check right column
+		for (int y = 0; y < this.height; y++){
+			if (this.getActiveNeighbors(0, y)>0){
+				leftContracts = false;
+			}
+			if (this.getActiveNeighbors(this.width-1, y)>0){
+				rightContracts = false;
+			}
+		}
+
+		if (topContracts){
+			this.topLeft.y -= 1;
+			this.yOffset += 1;
+			this.height -= 1;
+		}
+		if (bottomContracts){
+			this.height -= 1;
+		}
+		if (leftContracts){
+			this.topLeft.x += 1;
+			this.xOffset += 1;
+			this.width -= 1;
+		}
+		if (rightContracts){
+			this.width -= 1;
+		}
+	}
+
 
 	public void activateCell(int x, int y) {
 		cells[x][y] = true;
