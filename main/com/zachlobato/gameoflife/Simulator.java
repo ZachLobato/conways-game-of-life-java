@@ -22,6 +22,7 @@ public class Simulator extends JApplet implements MouseListener {
 	Timer timer = new Timer();
 	TimerTask task = new MyTimerTask();
 	World world = generatesSeedWorld();
+	private World emptyWorld;
 	
 	private class MyTimerTask extends TimerTask{
 		public void run(){
@@ -31,10 +32,11 @@ public class Simulator extends JApplet implements MouseListener {
 	}
 	
 	public void init(){
+		emptyWorld = new World(new Coordinate(0,0), 1,1);
 		backBuffer = createImage(this.getWidth(), this.getHeight());
 		backg = backBuffer.getGraphics();
 		this.addMouseListener(this);		
-		timer.schedule(task, 0, 64);
+		timer.schedule(task, 0, 1600);
 	}
 	
 	public void paint(Graphics g){
@@ -75,6 +77,10 @@ public class Simulator extends JApplet implements MouseListener {
 		
 		World staticWorld;
 		
+		// SHORT LIVED
+		staticWorld = new World(new Coordinate(0,0), 3, 3);		
+		staticWorld.activateCell(1, 1);
+		
 		// SIMPLE REPEAT
 //		staticWorld = new World(new Coordinate(5,5), 5, 3);		
 //		staticWorld.activateCell(1, 1);
@@ -82,21 +88,21 @@ public class Simulator extends JApplet implements MouseListener {
 //		staticWorld.activateCell(3, 1);
 		
 		// INFINITE GROWTH
-		staticWorld = new World(new Coordinate(0,0), 10, 8);
-		staticWorld.activateCell(1, 6);
-		
-		staticWorld.activateCell(3, 5);
-		staticWorld.activateCell(3, 6);
-		
-		staticWorld.activateCell(5, 2);
-		staticWorld.activateCell(5, 3);
-		staticWorld.activateCell(5, 4);
-		
-		staticWorld.activateCell(7, 1);
-		staticWorld.activateCell(7, 2);
-		staticWorld.activateCell(7, 3);
-		
-		staticWorld.activateCell(8, 2);
+//		staticWorld = new World(new Coordinate(0,0), 10, 8);
+//		staticWorld.activateCell(1, 6);
+//		
+//		staticWorld.activateCell(3, 5);
+//		staticWorld.activateCell(3, 6);
+//		
+//		staticWorld.activateCell(5, 2);
+//		staticWorld.activateCell(5, 3);
+//		staticWorld.activateCell(5, 4);
+//		
+//		staticWorld.activateCell(7, 1);
+//		staticWorld.activateCell(7, 2);
+//		staticWorld.activateCell(7, 3);
+//		
+//		staticWorld.activateCell(8, 2);
 				
 		return staticWorld;
 	}
@@ -106,6 +112,10 @@ public class Simulator extends JApplet implements MouseListener {
 	}
 
 	protected World simulateGeneration(World oldWorld) {
+		
+		if (oldWorld.width < 3 || oldWorld.height < 3)
+			return this.emptyWorld;
+		
 		// createReplacementWorld
 		World newWorld = createReplacementWorld(oldWorld);
 		
